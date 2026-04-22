@@ -1,4 +1,3 @@
-
 SELECT *
 FROM layoffs;
 
@@ -156,3 +155,4 @@ DROP COLUMN row_num
 -- Note:
 --  Rows where both total_laid_off and percentage_laid_off are NULL were removed due to insufficient data to reliably impute these values.
 -- Removed the row_num column after completing the duplicate detection process, as it was no longer needed.
+
