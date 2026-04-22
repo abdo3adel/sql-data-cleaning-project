@@ -1,74 +1,87 @@
-# SQL Data Cleaning Project – Layoffs Dataset
+#  Layoffs Data Cleaning Project (SQL)
 
-# Overview
-This project focuses on cleaning and preparing a layoffs dataset using SQL.  
-The goal is to ensure data quality, consistency, and reliability for further analysis.
+#  Overview
+This project focuses on cleaning and preparing a real-world layoffs dataset using SQL.  
+The goal is to transform raw data into a clean, structured format suitable for analysis by handling duplicates, missing values, and inconsistent formatting.
+
+---
+
+##  Objectives
+- Create a safe staging environment for data cleaning
+- Identify and remove duplicate records
+- Standardize inconsistent text and date formats
+- Handle missing values in key fields
+- Remove unnecessary columns after processing
 
 ---
 
-# Objectives
-- Clean raw layoffs data
-- Remove duplicates
-- Handle missing values (NULLs)
-- Standardize text fields
-- Convert data types for proper analysis
-
----
 # Tools Used
 - MySQL
 - SQL (CTE, Window Functions, Data Cleaning techniques)
+
 ---
 
-## 🔄 Workflow Steps
+#  Data Cleaning Process
 
 ### 1. Data Staging
-- Created `layoff_staging` table from raw dataset
-- Preserved original data to avoid direct modifications
+- Created `layoff_staging` table from the raw `layoffs` dataset
+- Duplicated data into a second staging table (`layoff_staging2`) for safe transformations
 
-### 2. Duplicate Handling
-- Created `layoff_staging2` table with helper column (`row_num`)
-- Used `ROW_NUMBER()` with CTE to identify duplicate records
-- Removed duplicate rows successfully
+---
 
-### 3. Handling Missing Values
-- Identified NULL values in key columns (industry, total_laid_off, percentage_laid_off)
-- Removed rows where both `total_laid_off` and `percentage_laid_off` were NULL due to insufficient data
+### 2. Removing Duplicates
+- Used `ROW_NUMBER()` with `PARTITION BY` to identify duplicate rows
+- Applied a CTE to isolate duplicates
+- Removed duplicate records from the dataset
 
-### 4. Data Cleaning & Standardization
-- Used `TRIM()` to remove extra spaces
-- Cleaned trailing characters from text fields
-- Standardized inconsistent values
+---
 
-### 5. Date Formatting
-- Converted `date` column from TEXT to proper DATE format using `STR_TO_DATE()`
-- Updated column type to DATE for accurate time-based analysis
+### 3. Data Standardization
+- Used `TRIM()` to remove extra spaces from text fields
+- Standardized values in `company`, `industry`, and `country`
+- Cleaned trailing punctuation from country names
+- Converted inconsistent date formats using `STR_TO_DATE()`
+- Changed `date` column type from TEXT to DATE
 
-### 6. Final Cleanup
-- Removed helper column (`row_num`) after completing deduplication process
+---
+
+### 4. Handling Missing Values (NULLs)
+- Identified missing values in `industry`, `total_laid_off`, and `percentage_laid_off`
+- Applied a selective approach:
+  - Some NULL values were retained to preserve data integrity
+  - Some were considered for imputation using related records (same company)
+  - Rows with no reliable information were removed
+
+---
+
+### 5. Removing Unnecessary Data
+- Deleted rows where both `total_laid_off` and `percentage_laid_off` were NULL
+- Dropped helper column `row_num` after completing duplicate detection
 
 ---
 
 ##  Key SQL Concepts Used
 - CTE (Common Table Expressions)
 - Window Functions (ROW_NUMBER)
-- String Functions (TRIM)
-- Date Functions (STR_TO_DATE)
+- Data Cleaning Functions (TRIM, STR_TO_DATE)
 - Data Type Conversion (ALTER TABLE)
-- Data Cleaning Best Practices
+- Filtering and Conditional Deletion
 
 ---
 
 ##  Outcome
-A clean and structured dataset ready for analysis and visualization, free from duplicates, inconsistent formats, and invalid data entries.
+A clean, structured, and analysis-ready dataset with:
+- No duplicate records
+- Standardized text and date formats
+- Improved data consistency
+- Reduced noise from invalid or incomplete rows
 
 ---
 
-##  What I Learned
-- Real-world data is messy and requires structured cleaning
+##  Key Learnings
 - Importance of staging tables in data workflows
-- How to handle duplicates and missing values properly
-- Practical use of SQL for data preprocessing
+- Practical use of SQL for real-world data cleaning
+- How to handle duplicates using window functions
+- Balancing between data removal and data retention
+- Data quality decision-making (delete vs impute vs retain NULLs)
 
----
-
-## 📁 Project Structure
